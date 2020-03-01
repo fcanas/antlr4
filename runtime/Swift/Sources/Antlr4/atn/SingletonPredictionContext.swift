@@ -17,7 +17,6 @@ public class SingletonPredictionContext: PredictionContext {
         self.parent = parent
         self.returnState = returnState
 
-
         super.init(parent != nil ? PredictionContext.calculateHashCode(parent!, returnState) : PredictionContext.calculateEmptyHashCode())
     }
 

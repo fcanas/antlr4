@@ -212,24 +212,8 @@ public class ATNConfigSet: Hashable, CustomStringConvertible {
         return false
     }
 
-    public var hashValue: Int {
-        if isReadonly() {
-            if cachedHashCode == -1 {
-                cachedHashCode = configsHashValue//configs.hashValue ;
-            }
-
-            return cachedHashCode
-        }
-
-        return configsHashValue // configs.hashValue;
-    }
-
-    private var configsHashValue: Int {
-        var hashCode = 1
-        for item in configs {
-            hashCode = hashCode &* 3 &+ item.hashValue
-        }
-        return hashCode
+    public func hash(into hasher: inout Hasher) {
+        configs.hash(into: &hasher)
     }
 
     public final var count: Int {

@@ -31,27 +31,6 @@ public class PredictionContext: Hashable, CustomStringConvertible {
         return oldGlobalNodeCount
     }()
 
-    /// 
-    /// Stores the computed hash code of this _org.antlr.v4.runtime.atn.PredictionContext_. The hash
-    /// code is computed in parts to match the following reference algorithm.
-    /// 
-    /// 
-    /// private int referenceHashCode() {
-    /// int hash = _org.antlr.v4.runtime.misc.MurmurHash#initialize MurmurHash.initialize_(_#INITIAL_HASH_);
-    /// 
-    /// for (int i = 0; i &lt; _#size()_; i++) {
-    /// hash = _org.antlr.v4.runtime.misc.MurmurHash#update MurmurHash.update_(hash, _#getParent getParent_(i));
-    /// }
-    /// 
-    /// for (int i = 0; i &lt; _#size()_; i++) {
-    /// hash = _org.antlr.v4.runtime.misc.MurmurHash#update MurmurHash.update_(hash, _#getReturnState getReturnState_(i));
-    /// }
-    /// 
-    /// hash = _org.antlr.v4.runtime.misc.MurmurHash#finish MurmurHash.finish_(hash, 2 * _#size()_);
-    /// return hash;
-    /// }
-    /// 
-    /// 
     public let cachedHashCode: Int
 
     init(_ cachedHashCode: Int) {
@@ -647,8 +626,6 @@ public class PredictionContext: Hashable, CustomStringConvertible {
             return updated
     }
 
-
-
     // ter's recursive version of Sam's getAllNodes()
     public static func getAllContextNodes(_ context: PredictionContext) -> [PredictionContext] {
         var nodes = [PredictionContext]()
@@ -750,6 +727,10 @@ public class PredictionContext: Hashable, CustomStringConvertible {
 
     public var description: String {
         return String(describing: PredictionContext.self) + "@" + String(Unmanaged.passUnretained(self).toOpaque().hashValue)
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        id.hash(into: &hasher)
     }
 }
 

@@ -95,12 +95,9 @@ public final class LexerIndexedCustomAction: LexerAction {
         try action.execute(lexer)
     }
 
-
-    public override var hashValue: Int {
-        var hash = MurmurHash.initialize()
-        hash = MurmurHash.update(hash, offset)
-        hash = MurmurHash.update(hash, action)
-        return MurmurHash.finish(hash, 2)
+    public override func hash(into hasher: inout Hasher) {
+        offset.hash(into: &hasher)
+        action.hash(into: &hasher)
     }
 
 

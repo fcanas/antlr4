@@ -61,14 +61,11 @@ public class LexerTypeAction: LexerAction, CustomStringConvertible {
         lexer.setType(type)
     }
 
-
-    override
-    public var hashValue: Int {
-        var hash = MurmurHash.initialize()
-        hash = MurmurHash.update(hash, getActionType().rawValue)
-        hash = MurmurHash.update(hash, type)
-        return MurmurHash.finish(hash, 2)
+    public override func hash(into hasher: inout Hasher) {
+        getActionType().hash(into: &hasher)
+        type.hash(into: &hasher)
     }
+
     public var description: String {
         return "type(\(type))"
     }

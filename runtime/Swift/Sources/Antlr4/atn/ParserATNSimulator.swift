@@ -558,8 +558,8 @@ open class ParserATNSimulator: ATNSimulator {
     /// `t`, or `null` if the target state for this edge is not
     /// already cached
     /// 
-   func getExistingTargetState(_ previousD: DFAState, _ t: Int) -> DFAState? {
-        var edges = previousD.edges
+    func getExistingTargetState(_ previousD: DFAState, _ t: Int) -> DFAState? {
+    let edges = previousD.edges
         if edges == nil || (t + 1) < 0 || (t + 1) >= (edges!.count) {
             return nil
         }

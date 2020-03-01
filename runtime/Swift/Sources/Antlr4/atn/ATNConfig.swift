@@ -143,20 +143,11 @@ public class ATNConfig: Hashable, CustomStringConvertible {
         }
     }
 
-    /// 
-    /// An ATN configuration is equal to another if both have
-    /// the same state, they predict the same alternative, and
-    /// syntactic/semantic contexts are the same.
-    /// 
-
-    public var hashValue: Int {
-        var hashCode = MurmurHash.initialize(7)
-        hashCode = MurmurHash.update(hashCode, state.stateNumber)
-        hashCode = MurmurHash.update(hashCode, alt)
-        hashCode = MurmurHash.update(hashCode, context)
-        hashCode = MurmurHash.update(hashCode, semanticContext)
-        return MurmurHash.finish(hashCode, 4)
-
+    public func hash(into hasher: inout Hasher) {
+        state.hash(into: &hasher)
+        alt.hash(into: &hasher)
+        context.hash(into: &hasher)
+        semanticContext.hash(into: &hasher)
     }
 
     public var description: String {

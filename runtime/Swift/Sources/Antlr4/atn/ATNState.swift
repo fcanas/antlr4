@@ -125,9 +125,8 @@ public class ATNState: Hashable, CustomStringConvertible {
     /// 
     public final var nextTokenWithinRule: IntervalSet?
 
-
-    public var hashValue: Int {
-        return stateNumber
+    public func hash(into hasher: inout Hasher) {
+        stateNumber.hash(into: &hasher)
     }
 
 

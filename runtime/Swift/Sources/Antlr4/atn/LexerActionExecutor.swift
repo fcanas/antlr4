@@ -23,11 +23,10 @@
 public class LexerActionExecutor: Hashable {
 
     fileprivate final var lexerActions: [LexerAction]
-    /// 
-    /// Caches the result of _#hashCode_ since the hash code is an element
-    /// of the performance-critical _org.antlr.v4.runtime.atn.LexerATNConfig#hashCode_ operation.
-    /// 
-    fileprivate final var hashCode: Int
+
+    public func hash(into hasher: inout Hasher) {
+        lexerActions.hash(into: &hasher)
+    }
 
     /// 
     /// Constructs an executor for a sequence of _org.antlr.v4.runtime.atn.LexerAction_ actions.
@@ -40,8 +39,6 @@ public class LexerActionExecutor: Hashable {
         for lexerAction: LexerAction in lexerActions {
             hash = MurmurHash.update(hash, lexerAction)
         }
-
-        self.hashCode = MurmurHash.finish(hash, lexerActions.count)
     }
 
     /// 
@@ -175,29 +172,9 @@ public class LexerActionExecutor: Hashable {
 
     }
 
-
-    public var hashValue: Int {
-        return self.hashCode
-    }
-
-
 }
 
 public func ==(lhs: LexerActionExecutor, rhs: LexerActionExecutor) -> Bool {
-    if lhs === rhs {
-        return true
-    }
-    if lhs.lexerActions.count != rhs.lexerActions.count {
-        return false
-    }
-    let length = lhs.lexerActions.count
-    for i in 0..<length {
-        if !(lhs.lexerActions[i] == rhs.lexerActions[i]) {
-            return false
-        }
-    }
-
-
-    return lhs.hashCode == rhs.hashCode
-
+    return lhs.lexerActions == rhs.lexerActions
 }
+

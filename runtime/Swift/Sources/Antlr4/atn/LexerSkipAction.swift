@@ -55,13 +55,10 @@ public final class LexerSkipAction: LexerAction, CustomStringConvertible {
         lexer.skip()
     }
 
-
-    override
-    public var hashValue: Int {
-        var hash = MurmurHash.initialize()
-        hash = MurmurHash.update(hash, getActionType().rawValue)
-        return MurmurHash.finish(hash, 1)
+    public override func hash(into hasher: inout Hasher) {
+        getActionType().hash(into: &hasher)
     }
+
     public var description: String {
         return "skip"
     }

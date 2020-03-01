@@ -155,9 +155,10 @@ public class Vocabulary: Hashable {
         return String(tokenType)
     }
 
-    public var hashValue: Int {
-        return Unmanaged.passUnretained(self).toOpaque().hashValue
-//        return unsafeAddress(of: self).hashValue
+    public func hash(into hasher: inout Hasher) {
+        [literalNames,
+        symbolicNames,
+        displayNames,].forEach({ $0.hash(into: &hasher) })
     }
 
 }

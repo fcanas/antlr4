@@ -72,20 +72,13 @@ public class LexerATNConfig: ATNConfig {
         return passedThroughNonGreedyDecision
     }
 
-    override
-    /*public func hashCode() -> Int {
-
-    }*/
-    public var hashValue: Int {
-        var hashCode = MurmurHash.initialize(7)
-        hashCode = MurmurHash.update(hashCode, state.stateNumber)
-        hashCode = MurmurHash.update(hashCode, alt)
-        hashCode = MurmurHash.update(hashCode, context)
-        hashCode = MurmurHash.update(hashCode, semanticContext)
-        hashCode = MurmurHash.update(hashCode, passedThroughNonGreedyDecision ? 1 : 0)
-        hashCode = MurmurHash.update(hashCode, lexerActionExecutor)
-        return MurmurHash.finish(hashCode, 6)
-
+    public override func hash(into hasher: inout Hasher) {
+        state.hash(into: &hasher)
+        alt.hash(into: &hasher)
+        context.hash(into: &hasher)
+        semanticContext.hash(into: &hasher)
+        passedThroughNonGreedyDecision.hash(into: &hasher)
+        lexerActionExecutor.hash(into: &hasher)
     }
 
 }

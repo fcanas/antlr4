@@ -61,13 +61,12 @@ public class Interval: Hashable {
         return b - a + 1
     }
 
-
-    public var hashValue: Int {
-        var hash: Int = 23
-        hash = hash * 31 + a
-        hash = hash * 31 + b
-        return hash
+    public func hash(into hasher: inout Hasher) {
+        23.hash(into: &hasher)
+        a.hash(into: &hasher)
+        b.hash(into: &hasher)
     }
+
     /// 
     /// Does this start completely before other? Disjoint
     /// 

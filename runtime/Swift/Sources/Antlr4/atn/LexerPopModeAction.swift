@@ -56,14 +56,10 @@ public final class LexerPopModeAction: LexerAction, CustomStringConvertible {
         try lexer.popMode()
     }
 
-
-    override
-    public var hashValue: Int {
-        var hash = MurmurHash.initialize()
-        hash = MurmurHash.update(hash, getActionType().rawValue)
-        return MurmurHash.finish(hash, 1)
-
+    public override func hash(into hasher: inout Hasher) {
+        getActionType().hash(into: &hasher)
     }
+    
     public var description: String {
         return "popMode"
     }

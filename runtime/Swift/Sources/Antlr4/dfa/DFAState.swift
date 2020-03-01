@@ -115,11 +115,8 @@ public class DFAState: Hashable, CustomStringConvertible {
         return configs.getAltSet()
     }
 
-
-    public var hashValue: Int {
-        var hash = MurmurHash.initialize(7)
-        hash = MurmurHash.update(hash, configs.hashValue)
-        return MurmurHash.finish(hash, 1)
+    public func hash(into hasher: inout Hasher) {
+        configs.hash(into: &hasher)
     }
 
     /// 

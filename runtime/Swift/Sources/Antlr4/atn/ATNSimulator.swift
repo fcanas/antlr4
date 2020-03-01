@@ -75,11 +75,11 @@ open class ATNSimulator {
     open func getCachedContext(_ context: PredictionContext) -> PredictionContext {
         //TODO: synced (sharedContextCache!)
         //synced (sharedContextCache!) {
-        let visited = HashMap<PredictionContext, PredictionContext>()
+        var visited = Dictionary<PredictionContext, PredictionContext>()
 
         return PredictionContext.getCachedContext(context,
                 sharedContextCache,
-                visited)
+                &visited)
     }
 
     public static func edgeFactory(_ atn: ATN,

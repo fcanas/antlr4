@@ -21,7 +21,6 @@ public class PredictionContext: Hashable, CustomStringConvertible {
     /// 
     public static let EMPTY_RETURN_STATE = Int(Int32.max)
 
-    private static let INITIAL_HASH = UInt32(1)
 
     public static var globalNodeCount = 0
 
@@ -30,12 +29,6 @@ public class PredictionContext: Hashable, CustomStringConvertible {
         globalNodeCount += 1
         return oldGlobalNodeCount
     }()
-
-    public let cachedHashCode: Int
-
-    init(_ cachedHashCode: Int) {
-        self.cachedHashCode = cachedHashCode
-    }
 
     /// 
     /// Convert a _org.antlr.v4.runtime.RuleContext_ tree to a _org.antlr.v4.runtime.atn.PredictionContext_ graph.
@@ -72,7 +65,6 @@ public class PredictionContext: Hashable, CustomStringConvertible {
         fatalError(#function + " must be overridden")
     }
 
-
     /// 
     /// This means only the _#EMPTY_ context is in set.
     /// 
@@ -84,35 +76,32 @@ public class PredictionContext: Hashable, CustomStringConvertible {
         return getReturnState(size() - 1) == PredictionContext.EMPTY_RETURN_STATE
     }
 
-    public final var hashValue: Int {
-        return cachedHashCode
-    }
 
-    static func calculateEmptyHashCode() -> Int {
-        let hash = MurmurHash.initialize(INITIAL_HASH)
-        return MurmurHash.finish(hash, 0)
-    }
-
-    static func calculateHashCode(_ parent: PredictionContext?, _ returnState: Int) -> Int {
-        var hash = MurmurHash.initialize(INITIAL_HASH)
-        hash = MurmurHash.update(hash, parent)
-        hash = MurmurHash.update(hash, returnState)
-        return MurmurHash.finish(hash, 2)
-    }
-
-    static func calculateHashCode(_ parents: [PredictionContext?], _ returnStates: [Int]) -> Int {
-        var hash = MurmurHash.initialize(INITIAL_HASH)
-        var length = parents.count
-        for i in 0..<length {
-            hash = MurmurHash.update(hash, parents[i])
-        }
-        length = returnStates.count
-        for i in 0..<length {
-            hash = MurmurHash.update(hash, returnStates[i])
-        }
-
-        return  MurmurHash.finish(hash, 2 * parents.count)
-    }
+//    static func calculateEmptyHashCode() -> Int {
+//        let hash = MurmurHash.initialize(INITIAL_HASH)
+//        return MurmurHash.finish(hash, 0)
+//    }
+//
+//    static func calculateHashCode(_ parent: PredictionContext?, _ returnState: Int) -> Int {
+//        var hash = MurmurHash.initialize(INITIAL_HASH)
+//        hash = MurmurHash.update(hash, parent)
+//        hash = MurmurHash.update(hash, returnState)
+//        return MurmurHash.finish(hash, 2)
+//    }
+//
+//    static func calculateHashCode(_ parents: [PredictionContext?], _ returnStates: [Int]) -> Int {
+//        var hash = MurmurHash.initialize(INITIAL_HASH)
+//        var length = parents.count
+//        for i in 0..<length {
+//            hash = MurmurHash.update(hash, parents[i])
+//        }
+//        length = returnStates.count
+//        for i in 0..<length {
+//            hash = MurmurHash.update(hash, returnStates[i])
+//        }
+//
+//        return  MurmurHash.finish(hash, 2 * parents.count)
+//    }
 
     // dispatch
     public static func merge(
@@ -559,7 +548,7 @@ public class PredictionContext: Hashable, CustomStringConvertible {
     public static func getCachedContext(
         _ context: PredictionContext,
         _ contextCache: PredictionContextCache,
-        _ visited: HashMap<PredictionContext, PredictionContext>) -> PredictionContext {
+        _ visited: inout Dictionary<PredictionContext, PredictionContext>) -> PredictionContext {
             if context.isEmpty() {
                 return context
             }
@@ -584,7 +573,7 @@ public class PredictionContext: Hashable, CustomStringConvertible {
                     return context
                 }
 
-                let parent = getCachedContext(context.getParent(i)!, contextCache, visited)
+                let parent = getCachedContext(context.getParent(i)!, contextCache, &visited)
                 //modified by janyou != !==
                 if changed || parent !== context.getParent(i) {
                     if !changed {
@@ -629,14 +618,14 @@ public class PredictionContext: Hashable, CustomStringConvertible {
     // ter's recursive version of Sam's getAllNodes()
     public static func getAllContextNodes(_ context: PredictionContext) -> [PredictionContext] {
         var nodes = [PredictionContext]()
-        let visited = HashMap<PredictionContext, PredictionContext>()
-        getAllContextNodes_(context, &nodes, visited)
+        var visited = Dictionary<PredictionContext, PredictionContext>()
+        getAllContextNodes_(context, &nodes, &visited)
         return nodes
     }
 
     public static func getAllContextNodes_(_ context: PredictionContext?,
                                            _ nodes: inout [PredictionContext],
-                                           _ visited: HashMap<PredictionContext, PredictionContext>) {
+                                           _ visited: inout Dictionary<PredictionContext, PredictionContext>) {
         guard let context = context, visited[context] == nil else {
             return
         }
@@ -644,7 +633,7 @@ public class PredictionContext: Hashable, CustomStringConvertible {
         nodes.append(context)
         let length = context.size()
         for i in 0..<length {
-            getAllContextNodes_(context.getParent(i), &nodes, visited)
+            getAllContextNodes_(context.getParent(i), &nodes, &visited)
         }
     }
 

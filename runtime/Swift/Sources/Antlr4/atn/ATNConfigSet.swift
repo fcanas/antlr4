@@ -273,41 +273,28 @@ public class ATNConfigSet: Hashable, CustomStringConvertible {
         return buf
     }
 
-    /// 
-    /// override
-    /// public <T> func toArray(a : [T]) -> [T] {
-    /// return configLookup.toArray(a);
-    /// 
-    private final func configHash(_ stateNumber: Int,_ context: PredictionContext?) -> Int{
-        var hashCode = MurmurHash.initialize(7)
-        hashCode = MurmurHash.update(hashCode, stateNumber)
-        hashCode = MurmurHash.update(hashCode, context)
-        return MurmurHash.finish(hashCode, 2)
-    }
-
     public final func getConflictingAltSubsets() -> [BitSet] {
         let length = configs.count
-        let configToAlts = HashMap<Int, BitSet>(count: length)
+        var configToAlts = Dictionary<ATNConfig, BitSet>(minimumCapacity: length)
 
         for i in 0..<length {
-            let hash = configHash(configs[i].state.stateNumber, configs[i].context)
             var alts: BitSet
-            if let configToAlt = configToAlts[hash] {
+            if let configToAlt = configToAlts[configs[i]] {
                 alts = configToAlt
             } else {
                 alts = BitSet()
-                configToAlts[hash] = alts
+                configToAlts[configs[i]] = alts
             }
 
             try! alts.set(configs[i].alt)
         }
 
-        return configToAlts.values
+        return Array(configToAlts.values)
     }
 
-    public final func getStateToAltMap() -> HashMap<ATNState, BitSet> {
+    public final func getStateToAltMap() -> Dictionary<ATNState, BitSet> {
         let length = configs.count
-        let m = HashMap<ATNState, BitSet>(count: length)
+        var m = Dictionary<ATNState, BitSet>(minimumCapacity: length)
 
         for i in 0..<length {
             var alts: BitSet
@@ -396,7 +383,7 @@ public class ATNConfigSet: Hashable, CustomStringConvertible {
     public final func applyPrecedenceFilter(_ mergeCache: inout DoubleKeyMap<PredictionContext, PredictionContext, PredictionContext>?,_ parser: Parser,_ _outerContext: ParserRuleContext!) throws -> ATNConfigSet {
 
         let configSet = ATNConfigSet(fullCtx)
-        let statesFromAlt1 = HashMap<Int, PredictionContext>(count: configs.count)
+        var statesFromAlt1 = Dictionary<Int, PredictionContext>(minimumCapacity: configs.count)
         for config in configs {
             // handle alt 1 first
             if config.alt != 1 {

@@ -28,7 +28,7 @@ public class ArrayPredictionContext: PredictionContext {
 
         self.parents = parents
         self.returnStates = returnStates
-        super.init(PredictionContext.calculateHashCode(parents, returnStates))
+        super.init()
     }
 
     override

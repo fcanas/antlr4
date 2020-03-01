@@ -12,14 +12,14 @@
 /// map; avoids mem creation.
 ///
 public struct DoubleKeyMap<Key1:Hashable, Key2:Hashable, Value> {
-    private var data: HashMap<Key1, HashMap<Key2, Value>> = HashMap<Key1, HashMap<Key2, Value>>()
+    private var data: Dictionary<Key1, Dictionary<Key2, Value>> = Dictionary<Key1, Dictionary<Key2, Value>>()
     @discardableResult
     public mutating func put(_ k1: Key1, _ k2: Key2, _ v: Value) -> Value? {
 
         var data2 = data[k1]
         var prev: Value? = nil
         if data2 == nil {
-            data2 = HashMap<Key2, Value>()
+            data2 = Dictionary<Key2, Value>()
 
         } else {
             prev = data2![k2]
@@ -38,7 +38,7 @@ public struct DoubleKeyMap<Key1:Hashable, Key2:Hashable, Value> {
 
     }
 
-    public func get(_ k1: Key1) -> HashMap<Key2, Value>? {
+    public func get(_ k1: Key1) -> Dictionary<Key2, Value>? {
         return data[k1]
     }
 }
